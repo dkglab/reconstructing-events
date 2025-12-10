@@ -105,7 +105,23 @@ client = gspread.oauth(
     scopes=SCOPES,
     credentials_filename=CREDENTIALS,
 )
-spreadsheet = client.open(input("The name of your Google sheet: "))
+
+# Try to open sheets in order of preference
+sheet_names = ["Copy of Reconstructing Events", "Reconstructing Events"]
+spreadsheet = None
+
+for name in sheet_names:
+    try:
+        spreadsheet = client.open(name)
+        print(f"Opened spreadsheet: {name}", file=sys.stderr)
+        break
+    except gspread.exceptions.SpreadsheetNotFound:
+        continue
+
+# If neither worked, prompt for a name
+if spreadsheet is None:
+    spreadsheet = client.open(input("The name of your Google sheet: "))
+
 worksheet = spreadsheet.worksheet("Triples")
 graph = Graph()
 
