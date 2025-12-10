@@ -57,3 +57,12 @@ and make your own copy of it.
 
 1. Go to <https://spaestiem.fly.dev/> and click "Choose RDF event data
    to load" and choose the `events.ttl` file you just downloaded.
+
+## Privacy policy
+
+We do not collect, store, or share any personal data when you use these tools.
+
+## Terms of service
+
+This free, non-commercial project is provided “as is,” without warranties of any kind. Use is at your sole risk; we disclaim all liability for errors, omissions, or damages.
+
