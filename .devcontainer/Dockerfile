@@ -1,2 +1,2 @@
 FROM mcr.microsoft.com/devcontainers/java
-RUN apt update && apt install -y swi-prolog
+RUN apt update && apt install -y swi-prolog python3-venv
