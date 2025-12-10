@@ -1,0 +1,10 @@
+# Allen interval calculus
+
+See paper <https://dl.acm.org/doi/abs/10.1145/2536146.2536181>
+Implementation of Allen's interval logic with the semantic web
+
+## To run inference
+
+```text
+make answer.n3
+```

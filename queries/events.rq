@@ -1,0 +1,72 @@
+PREFIX bmt: <https://github.com/british-music-trade/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ecrm: <http://erlangen-crm.org/current/>
+PREFIX list: <http://jena.apache.org/ARQ/list#>
+
+CONSTRUCT {
+  ?place a ecrm:E53_Place ;
+    rdfs:label ?place_label ;
+    ecrm:P168_place_is_defined_by ?geometry ;
+    .
+
+  ?event a ecrm:E5_Event ;
+    rdfs:label ?event_label ;
+    ecrm:P7_took_place_at ?place ;
+    ecrm:P4_has_time-span ?timespan ;
+    ecrm:P11_had_participant ?actor ;
+    .
+
+  ?timespan a ecrm:E52_Time-Span ;
+    rdfs:label ?timespan_label ;
+    ecrm:P82a_begin_of_the_begin ?bob ;
+    ecrm:P82b_end_of_the_end ?eoe ;
+    .
+
+  ?actor a ecrm:E39_Actor ;
+    rdfs:label ?actor_label ;
+    bmt:has_occupation_list ?actor_occupations ;
+    .
+  ?actor_occupations rdfs:member ?actor_occupation .
+  ?actor_occupation
+    rdf:value ?occupation ;
+    bmt:index ?occupation_index ;
+    .
+  ?occupation rdfs:label ?occupation_label .
+
+} WHERE {
+  ?place a ecrm:E53_Place ;
+    rdfs:label ?place_label ;
+    ecrm:P168_place_is_defined_by ?geometry .
+
+  ?event a ecrm:E5_Event ;
+    rdfs:label ?event_label ;
+    ecrm:P7_took_place_at ?place ;
+    ecrm:P4_has_time-span ?timespan ;
+    ecrm:P11_had_participant ?actor .
+
+  ?timespan a ecrm:E52_Time-Span ;
+    rdfs:label ?timespan_label .
+
+  ?actor a ecrm:E39_Actor ;
+    rdfs:label ?actor_label ;
+
+  OPTIONAL {
+    ?timespan ecrm:P82a_begin_of_the_begin ?bob
+  }
+  OPTIONAL {
+    ?timespan ecrm:P82b_end_of_the_end ?eoe
+  }
+  OPTIONAL {
+    ?actor bmt:has_occupation_list ?occupations .
+    ?occupations
+      list:member ?occupation ;
+      list:index (?occupation_index ?occupation) ;
+      .
+    ?occupation rdfs:label ?occupation_label .
+    BIND(IRI(CONCAT(STR(?actor), "_occupations"))
+         AS ?actor_occupations)
+    BIND(IRI(CONCAT(STR(?actor), "_occupation_", STR(?occupation_index)))
+         AS ?actor_occupation)
+  }
+}

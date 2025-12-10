@@ -1,0 +1,10 @@
+PREFIX bmt: <https://github.com/british-music-trade/>
+PREFIX bioc: <http://ldf.fi/schema/bioc/>
+PREFIX list: <http://www.w3.org/2000/10/swap/list#>
+
+{
+    ?x bmt:has_occupation_list ?l .
+    ?l list:member ?occupation .
+} => {
+    ?x bioc:has_occupation ?occupation .
+} .

@@ -1,0 +1,20 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX string: <http://www.w3.org/2000/10/swap/string#>
+PREFIX log: <http://www.w3.org/2000/10/swap/log#>
+PREFIX ecrm: <http://erlangen-crm.org/current/>
+
+# Give temporal entities a timespan if they don't have one
+{
+    ?te a ecrm:E2_Temporal_Entity .
+    
+    _:t log:notIncludes { ?te ecrm:P4_has_time-span ?_ } .
+
+    ?te log:uri ?te_uri .
+
+    (?te_uri "_timespan") string:concatenation ?ts_uri .
+
+    ?ts log:uri ?ts_uri .
+    
+} => {
+    ?te ecrm:P4_has_time-span ?ts  .
+} .

@@ -1,0 +1,89 @@
+PREFIX bmt:  <https://github.com/british-music-trade/>
+PREFIX ecrm: <http://erlangen-crm.org/current/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sh:   <http://www.w3.org/ns/shacl#>
+PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+bmt:LabelShape
+  a sh:PropertyShape ;
+  sh:path rdfs:label ;
+  sh:datatype rdf:langString ;
+  sh:minCount 1 ;
+  .
+
+bmt:PlaceShape
+  a sh:NodeShape ;
+  sh:targetClass ecrm:E53_Place ;
+  sh:property bmt:LabelShape ;
+  sh:property [
+    sh:path ecrm:P168_place_is_defined_by ;
+    sh:datatype geo:wktLiteral ;
+    sh:maxCount 1 ;
+    ] ;
+  .
+
+bmt:EventShape
+  a sh:NodeShape ;
+  sh:targetClass ecrm:E5_Event ;
+  sh:property bmt:LabelShape ;
+  sh:property [
+    sh:path ecrm:P7_took_place_at ;
+    sh:class ecrm:E53_Place ;
+    # sh:maxCount 1 ;  # some events have multiple places?
+    ] ;
+  sh:property [
+    sh:path ecrm:P4_has_time-span ;
+    sh:class ecrm:E52_Time-Span ;
+    # sh:maxCount 1 ;  # some events have multiple time-spans?
+    ] ;
+  sh:property [
+    sh:path ecrm:P11_had_participant ;
+    sh:class ecrm:E39_Actor ;
+    ] ;
+  .
+
+bmt:ActorShape
+  a sh:NodeShape ;
+  sh:property bmt:LabelShape ;
+  .
+
+
+bmt:TimeSpanShape
+  a sh:NodeShape ;
+  sh:targetClass ecrm:E52_Time-Span ;
+  sh:property bmt:LabelShape ;
+  sh:property [
+    sh:path ecrm:P82a_begin_of_the_begin ;
+    sh:datatype xsd:dateTime ;
+    sh:maxCount 1 ;
+    sh:lessThanOrEquals ecrm:P81a_end_of_the_begin ;
+    sh:lessThan ecrm:P81b_begin_of_the_end ;
+    sh:lessThan ecrm:P82b_end_of_the_end ;
+    ] ;
+  sh:property [
+    sh:path ecrm:P81a_end_of_the_begin ;
+    sh:datatype xsd:dateTime ;
+    sh:maxCount 1 ;
+    sh:greaterThanOrEquals ecrm:P82a_begin_of_the_begin ;
+    sh:lessThan ecrm:P81b_begin_of_the_end ;
+    sh:lessThan ecrm:P82b_end_of_the_end ;
+    ] ;
+  sh:property [
+    sh:path ecrm:P81b_begin_of_the_end ;
+    sh:datatype xsd:dateTime ;
+    sh:maxCount 1 ;
+    sh:lessThanOrEquals ecrm:P82b_end_of_the_end ;
+    sh:greaterThan ecrm:P82a_begin_of_the_begin ;
+    sh:greaterThan ecrm:P81a_end_of_the_begin ;
+    ] ;
+  sh:property [
+    sh:path ecrm:P82b_end_of_the_end ;
+    sh:datatype xsd:dateTime ;
+    # sh:maxCount 1 ;  # some timespans have multiple ends?
+    sh:greaterThanOrEquals ecrm:P81b_begin_of_the_end ;
+    sh:greaterThan ecrm:P81a_end_of_the_begin ;
+    sh:greaterThan ecrm:P82a_begin_of_the_begin ;
+    ] ;
+  .

@@ -1,0 +1,110 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX string: <http://www.w3.org/2000/10/swap/string#>
+PREFIX log: <http://www.w3.org/2000/10/swap/log#>
+PREFIX ecrm: <http://erlangen-crm.org/current/>
+PREFIX bioc: <http://ldf.fi/schema/bioc/>
+
+# Label timespan based on associated event
+{
+    ?x
+      rdfs:label ?label ;
+      ecrm:P4_has_time-span ?ts .
+
+    _:t log:notIncludes { ?ts rdfs:label ?_ } .
+
+    ( ?label " timespan" ) string:concatenation ?ts_label_str .
+    ( ?ts_label_str "en" ) log:langlit ?ts_label .
+
+} => {
+    ?ts rdfs:label ?ts_label .
+} .
+
+# Label timespan based on URI
+{
+    ?ts a ecrm:E52_Time-Span .
+
+    _:t log:notIncludes { ?ts rdfs:label ?_ } .
+
+    ?ts log:uri ?ts_uri .
+
+    (?ts_uri "^.*/(.*)$") string:scrape ?ts_uri_path .
+
+    (?ts_uri_path "_" " ") string:replace ?ts_label_str .
+
+    ( ?ts_label_str "en" ) log:langlit ?ts_label .
+
+} => {
+    ?ts rdfs:label ?ts_label .
+} .
+
+# Label event based on URI
+{
+    ?e a ecrm:E5_Event .
+
+    _:t log:notIncludes { ?e rdfs:label ?_ } .
+
+    ?e log:uri ?e_uri .
+
+    (?e_uri "^.*/(.*)$") string:scrape ?e_uri_path .
+
+    (?e_uri_path "_" " ") string:replace ?e_label_str .
+
+    ( ?e_label_str "en" ) log:langlit ?e_label .
+
+} => {
+    ?e rdfs:label ?e_label .
+} .
+
+# Label place based on URI
+{
+    ?place a ecrm:E53_Place .
+
+    _:t log:notIncludes { ?place rdfs:label ?_ } .
+
+    ?place log:uri ?place_uri .
+
+    (?place_uri "^.*/(.*)$") string:scrape ?place_uri_path .
+
+    (?place_uri_path "_" " ") string:replace ?place_label_str .
+
+    ( ?place_label_str "en" ) log:langlit ?place_label .
+
+} => {
+    ?place rdfs:label ?place_label .
+} .
+
+# Label actor based on URI
+{
+    ?actor a ecrm:E39_Actor .
+
+    _:t log:notIncludes { ?actor rdfs:label ?_ } .
+
+    ?actor log:uri ?actor_uri .
+
+    (?actor_uri "^.*/(.*)$") string:scrape ?actor_uri_path .
+
+    (?actor_uri_path "_" " ") string:replace ?actor_label_str .
+
+    ( ?actor_label_str "en" ) log:langlit ?actor_label .
+
+} => {
+    ?actor rdfs:label ?actor_label .
+} .
+
+# Label occupation based on URI
+{
+    ?x bioc:has_occupation ?occupation .
+
+    _:t log:notIncludes { ?occupation rdfs:label ?_ } .
+
+    ?occupation log:uri ?occupation_uri .
+
+    (?occupation_uri "^.*/(.*)$") string:scrape ?occupation_uri_path .
+
+    (?occupation_uri_path "_" " ") string:replace ?occupation_label_str .
+
+    ( ?occupation_label_str "en" ) log:langlit ?occupation_label .
+
+} => {
+    ?occupation rdfs:label ?occupation_label .
+} .

@@ -1,0 +1,12 @@
+.DS_Store
+.envrc
+*-inferred.ttl
+/tools/eye/*
+!/tools/eye/Makefile
+/tools/jena/*
+!/tools/jena/Makefile
+/ecrm/datatype-properties.ttl
+/ecrm/object-properties.ttl
+/tools/import-triples/triples.ttl
+/triples.ttl
+/events.ttl

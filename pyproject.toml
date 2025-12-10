@@ -1,0 +1,7 @@
+[project]
+name = "import-triples"
+version = "2025.12.09"
+
+[tool.pyright]
+venv = "venv"
+venvPath = "tools/import-triples"

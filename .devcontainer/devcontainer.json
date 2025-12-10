@@ -1,0 +1,17 @@
+{
+  "build": { "dockerfile": "Dockerfile" },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.makefile-tools",
+        "DavidAnson.vscode-markdownlint",
+        "w3cn3.n3-lang-exec",
+        "rdfox.rdfox-rdf",
+        "ms-python.python",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ]
+    }
+  }
+}
