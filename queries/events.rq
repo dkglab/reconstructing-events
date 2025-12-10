@@ -21,6 +21,8 @@ CONSTRUCT {
     rdfs:label ?timespan_label ;
     ecrm:P82a_begin_of_the_begin ?bob ;
     ecrm:P82b_end_of_the_end ?eoe ;
+    ecrm:P81a_end_of_the_begin ?eob ;
+    ecrm:P81b_begin_of_the_end ?boe ;
     .
 
   ?actor a ecrm:E39_Actor ;
@@ -56,6 +58,12 @@ CONSTRUCT {
   }
   OPTIONAL {
     ?timespan ecrm:P82b_end_of_the_end ?eoe
+  }
+  OPTIONAL {
+    ?timespan ecrm:P81a_end_of_the_begin ?eob
+  }
+  OPTIONAL {
+    ?timespan ecrm:P81b_begin_of_the_end ?boe
   }
   OPTIONAL {
     ?actor bmt:has_occupation_list ?occupations .
