@@ -28,6 +28,10 @@ and make your own copy of it.
 
 1. In your sheet, create triples describing your event.
 
+1. The first time you click one of the buttons to add triples in the
+   sheet, you will get a scary warning! Don't worry, you can trust me
+   :^)
+
 1. In your codespace, open a terminal and run:
 
    ```bash
@@ -51,4 +55,5 @@ and make your own copy of it.
 1. In your codespace file explorer, right-click or control-click on
    `events.ttl` and select "Download".
 
-1. Go to <https://spaestiem.fly.dev/> and click "Choose RDF event data to load" and choose the `events.ttl` file you just downloaded.
+1. Go to <https://spaestiem.fly.dev/> and click "Choose RDF event data
+   to load" and choose the `events.ttl` file you just downloaded.
