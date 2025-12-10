@@ -8,13 +8,6 @@
 sheet](https://docs.google.com/spreadsheets/d/1memmdLOAsgAHJqrMrXjGbh7_R9VV-iDk6XJMN5Qg8Gc/edit?usp=sharing)
 and make your own copy of it.
 
-1. Make sure your copy of the sheet is named `Reconstructing Events`,
-   not `Reconstructing Events copy` or some other variation.
-
-1. Share your sheet with
-   `import-triples@import-triples.iam.gserviceaccount.com` as a
-   viewer.
-
 ### Open your codespace
 
 1. Go to the [Reconstructing Events GitHub repository](https://github.com/dkglab/reconstructing-events).
@@ -37,6 +30,21 @@ and make your own copy of it.
    ```bash
    make triples.ttl
    ```
+
+1. The first time you run `make triples.ttl`, a browser tab will open
+   and you will be prompted to authorize Import Triples to read the
+   names of files in your Google Drive, and to read data in your
+   Google Sheets. This **only** grants access when **you** run the
+   script, not other people.
+
+1. Because this is not a commercially published app, it has not been
+   “verified” by Google, so you will need to click through a few
+   scary-looking notices and on “advanced” settings to finish
+   authorizing the script. On subsequent runs, you won't need to do
+   this.
+
+1. Once you're done authorizing, the script should finish creating
+   `triples.ttl`.
 
 1. In your codespace file explorer, open `triples.ttl` to see the
    triples you wrote.
