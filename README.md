@@ -19,11 +19,20 @@ and make your own copy of it.
 
 ## Creating triples and running inference
 
+### Create your triples in the sheet
+
 1. In your sheet, create triples describing your event.
 
 1. The first time you click one of the buttons to add triples in the
-   sheet, you will get a scary warning! Don't worry, you can trust me
-   :^)
+   sheet, you will get a scary warning. The “app script” you will be
+   asked to authorize just takes some text you type into the forms on
+   the right and formats it properly as triples for insertion into the
+   table on the left.
+
+1. The forms are just for convenience; you can edit and copy and paste
+   values among the rows of triples as normal.
+
+### Import the triples into your codespace
 
 1. In your codespace, open a terminal and run:
 
@@ -48,6 +57,8 @@ and make your own copy of it.
 
 1. In your codespace file explorer, open `triples.ttl` to see the
    triples you wrote.
+
+### Infer some more triples and validate your events
 
 1. In your codespace terminal, run:
 
