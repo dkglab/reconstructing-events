@@ -1,13 +1,18 @@
-import json
 import gspread
 import sys
-import os
 from rdflib import Graph, URIRef, Literal, BNode, Node
 from rdflib.namespace import XSD, RDFS, Namespace
 from rdflib.util import from_n3
 from rdflib.collection import Collection
 from urllib.parse import quote
 from typing import cast
+
+CREDENTIALS = "credentials.json"
+
+SCOPES = [
+    "https://www.googleapis.com/auth/drive.metadata.readonly",
+    "https://www.googleapis.com/auth/spreadsheets.readonly",
+]
 
 PREFIXES = {
     "": "https://github.com/dkglab/reconstructing-events/",
@@ -96,14 +101,11 @@ def add_triple(g, s, p, o):
     g.add((s, p, o))
 
 
-service_account = os.getenv("IMPORT_TRIPLES_SERVICE_ACCOUNT")
-if service_account is None:
-    raise ValueError(
-        "The environment variable 'IMPORT_TRIPLES_SERVICE_ACCOUNT' is not set."
-    )
-
-client = gspread.auth.service_account_from_dict(json.loads(service_account))
-spreadsheet = client.open("Reconstructing Events")
+client = gspread.oauth(
+    scopes=SCOPES,
+    credentials_filename=CREDENTIALS,
+)
+spreadsheet = client.open(input("The name of your Google sheet: "))
 worksheet = spreadsheet.worksheet("Triples")
 graph = Graph()
 
