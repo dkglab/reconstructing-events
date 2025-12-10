@@ -5,7 +5,11 @@ from rdflib.namespace import XSD, RDFS, Namespace
 from rdflib.util import from_n3
 from rdflib.collection import Collection
 from urllib.parse import quote
-from typing import cast
+from typing import cast, Any, Mapping, Iterable
+from google.oauth2.credentials import Credentials
+
+
+OAUTH_PORT = 8080
 
 CREDENTIALS = "credentials.json"
 
@@ -27,6 +31,13 @@ PREFIXES = {
 }
 
 ECRM = Namespace(PREFIXES["ecrm"])
+
+
+def fixed_port_local_server_flow(
+    client_config: Mapping[str, Any], scopes: Iterable[str], port: int = 0
+) -> Credentials:
+    """Local-server flow that always listens on port 8080."""
+    return gspread.auth.local_server_flow(client_config, scopes, port=OAUTH_PORT)
 
 
 def expand_curie(curie: str) -> URIRef:
@@ -102,8 +113,7 @@ def add_triple(g, s, p, o):
 
 
 client = gspread.oauth(
-    scopes=SCOPES,
-    credentials_filename=CREDENTIALS,
+    scopes=SCOPES, credentials_filename=CREDENTIALS, flow=fixed_port_local_server_flow
 )
 
 # Try to open sheets in order of preference
