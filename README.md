@@ -24,10 +24,10 @@ and make your own copy of it.
 1. In your sheet, create triples describing your event.
 
 1. The first time you click one of the buttons to add triples in the
-   sheet, you will get a scary warning. The “app script” you will be
-   asked to authorize just takes some text you type into the forms on
-   the right and formats it properly as triples for insertion into the
-   table on the left.
+   sheet, you will get a scary warning. The “Add Triples” script you
+   will be asked to authorize just takes some text you type into the
+   forms on the right and formats it properly as triples for insertion
+   into the table on the left.
 
 1. The forms are just for convenience; you can edit and copy and paste
    values among the rows of triples as normal.
@@ -43,8 +43,8 @@ and make your own copy of it.
 1. The first time you run `make triples.ttl`, a browser tab will open
    and you will be prompted to authorize Import Triples to read the
    names of files in your Google Drive, and to read data in your
-   Google Sheets. This **only** grants access when **you** run the
-   script, not other people.
+   Google Sheets. This **only** grants access to your data when
+   **you** run the script, not other people.
 
 1. Because this is not a commercially published app, it has not been
    “verified” by Google, so you will need to click through a few
@@ -52,8 +52,18 @@ and make your own copy of it.
    authorizing the script. On subsequent runs, you won't need to do
    this.
 
-1. Once you're done authorizing, the script should finish creating
-   `triples.ttl`.
+1. After you’ve finished consenting to data access, Google will try to
+   redirect your browser back to your local machine. But since you are
+   running in a codespace, this will fail. This is OK and
+   expected. When you see the browser fail to connect to `localhost`,
+   copy the URL out of the address bar. It will look something like
+   this (but with much longer strings in place of `XXX`, `YYY`, and
+   `ZZZ`: `http://localhost/?state=XXX&code=YYY&scope=ZZZ`
+
+1. Switch back to the browser tab that your codespace is in, and paste
+   the URL you copied into the terminal.
+
+1. The script should finish creating `triples.ttl`.
 
 1. In your codespace file explorer, open `triples.ttl` to see the
    triples you wrote.
