@@ -39,6 +39,7 @@ def manual_auth_flow(
 ) -> Credentials:
     """Flow that tries localhost server, falls back to manual code entry on interrupt."""
     import webbrowser
+    import signal
 
     flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
 
@@ -47,27 +48,36 @@ def manual_auth_flow(
         print("\nOpening browser for authorization...")
         print("(Press Ctrl-C to switch to manual code entry)\n")
 
+        # Save the original signal handler
+        original_sigint = signal.signal(signal.SIGINT, signal.default_int_handler)
+        
         # This opens the browser and runs local server
         flow.run_local_server(port=port if port else 8080)
+        
+        # Restore the original handler if successful
+        signal.signal(signal.SIGINT, original_sigint)
 
     except (KeyboardInterrupt, MismatchingStateError):
-        # User interrupted, switch to manual flow
+        # Restore the original handler
+        signal.signal(signal.SIGINT, original_sigint)
+        
+        # User interrupted or state mismatch, switch to manual flow
         print("\n\nSwitching to manual authorization...")
-
+        
         # Create a NEW flow with the correct redirect URI
         flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
         flow.redirect_uri = "http://localhost"
         auth_url, _ = flow.authorization_url(prompt="consent")
-
+        
         print("Please visit this URL to authorize:")
         print(auth_url)
         webbrowser.open(auth_url)
         print("\nAfter authorizing, copy the 'code' parameter from the redirect URL.")
         print()
-
+        
         code = input("Enter the authorization code: ").strip()
         flow.fetch_token(code=code)
-
+    
     return cast(Credentials, flow.credentials)
 
 
