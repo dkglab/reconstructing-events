@@ -37,7 +37,8 @@ ECRM = Namespace(PREFIXES["ecrm"])
 def manual_auth_flow(
     client_config: Mapping[str, Any], scopes: Iterable[str], port: int = 0
 ) -> Credentials:
-    """Manual flow that prints URL and waits for authorization code."""
+    """Manual flow that opens browser and waits for authorization code."""
+    import webbrowser
 
     flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
 
@@ -45,9 +46,10 @@ def manual_auth_flow(
     flow.redirect_uri = "http://localhost"
     auth_url, _ = flow.authorization_url(prompt="consent")
 
-    # Print the URL for the user
-    print("\nPlease visit this URL to authorize the application:")
-    print(auth_url)
+    # Open the URL in the browser automatically
+    print("\nOpening browser for authorization...")
+    webbrowser.open(auth_url)
+    print("After authorizing, copy the 'code' parameter from the redirect URL.")
     print()
 
     # Wait for user to paste the authorization code
