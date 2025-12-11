@@ -6,7 +6,7 @@ from rdflib.util import from_n3
 from rdflib.collection import Collection
 from urllib.parse import quote
 from typing import cast, Any, Mapping, Iterable
-from google.oauth2.credentials import Credentials
+from google.auth.credentials import Credentials
 
 
 OAUTH_PORT = 8080
