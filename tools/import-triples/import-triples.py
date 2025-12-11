@@ -6,7 +6,8 @@ from rdflib.util import from_n3
 from rdflib.collection import Collection
 from urllib.parse import quote
 from typing import cast, Any, Mapping, Iterable
-from google.auth.credentials import Credentials
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 
 OAUTH_PORT = 8080
@@ -37,13 +38,11 @@ def manual_auth_flow(
     client_config: Mapping[str, Any], scopes: Iterable[str], port: int = 0
 ) -> Credentials:
     """Manual flow that prints URL and waits for authorization code."""
-    from google_auth_oauthlib.flow import InstalledAppFlow
-    from google.oauth2.credentials import Credentials as OAuth2Credentials
 
     flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
 
     # Generate the authorization URL
-    flow.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+    flow.redirect_uri = "http://localhost"
     auth_url, _ = flow.authorization_url(prompt="consent")
 
     # Print the URL for the user
@@ -57,7 +56,7 @@ def manual_auth_flow(
     # Exchange the code for credentials
     flow.fetch_token(code=code)
 
-    return cast(OAuth2Credentials, flow.credentials)
+    return cast(Credentials, flow.credentials)
 
 
 def expand_curie(curie: str) -> URIRef:
