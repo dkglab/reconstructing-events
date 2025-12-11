@@ -1,5 +1,6 @@
 import gspread
 import sys
+import webbrowser
 from rdflib import Graph, URIRef, Literal, BNode, Node
 from rdflib.namespace import XSD, RDFS, Namespace
 from rdflib.util import from_n3
@@ -8,7 +9,6 @@ from urllib.parse import quote
 from typing import cast, Any, Mapping, Iterable
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
-from oauthlib.oauth2.rfc6749.errors import MismatchingStateError
 
 OAUTH_PORT = 8080
 
@@ -37,47 +37,18 @@ ECRM = Namespace(PREFIXES["ecrm"])
 def manual_auth_flow(
     client_config: Mapping[str, Any], scopes: Iterable[str], port: int = 0
 ) -> Credentials:
-    """Flow that tries localhost server, falls back to manual code entry on interrupt."""
-    import webbrowser
-    import signal
-
     flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
+    flow.redirect_uri = "http://localhost"
+    auth_url, _ = flow.authorization_url(prompt="consent")
 
-    # Try the standard localhost server flow first
-    try:
-        print("\nOpening browser for authorization...")
-        print("(Press Ctrl-C to switch to manual code entry)\n")
+    print("\nPlease visit this URL to authorize:")
+    print(auth_url)
+    webbrowser.open(auth_url)
+    print("\nAfter authorizing, copy the 'code' parameter from the redirect URL.\n")
 
-        # Save the original signal handler
-        original_sigint = signal.signal(signal.SIGINT, signal.default_int_handler)
-        
-        # This opens the browser and runs local server
-        flow.run_local_server(port=port if port else 8080)
-        
-        # Restore the original handler if successful
-        signal.signal(signal.SIGINT, original_sigint)
+    code = input("Enter the authorization code: ").strip()
+    flow.fetch_token(code=code)
 
-    except (KeyboardInterrupt, MismatchingStateError):
-        # Restore the original handler
-        signal.signal(signal.SIGINT, original_sigint)
-        
-        # User interrupted or state mismatch, switch to manual flow
-        print("\n\nSwitching to manual authorization...")
-        
-        # Create a NEW flow with the correct redirect URI
-        flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
-        flow.redirect_uri = "http://localhost"
-        auth_url, _ = flow.authorization_url(prompt="consent")
-        
-        print("Please visit this URL to authorize:")
-        print(auth_url)
-        webbrowser.open(auth_url)
-        print("\nAfter authorizing, copy the 'code' parameter from the redirect URL.")
-        print()
-        
-        code = input("Enter the authorization code: ").strip()
-        flow.fetch_token(code=code)
-    
     return cast(Credentials, flow.credentials)
 
 
