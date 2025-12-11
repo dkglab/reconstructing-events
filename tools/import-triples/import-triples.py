@@ -37,27 +37,33 @@ ECRM = Namespace(PREFIXES["ecrm"])
 def manual_auth_flow(
     client_config: Mapping[str, Any], scopes: Iterable[str], port: int = 0
 ) -> Credentials:
-    """Manual flow that opens browser and waits for authorization code."""
+    """Flow that tries localhost server, falls back to manual code entry on interrupt."""
     import webbrowser
 
     flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
 
-    # Generate the authorization URL
-    flow.redirect_uri = "http://localhost"
-    auth_url, _ = flow.authorization_url(prompt="consent")
-
-    # Open the URL in the browser automatically
-    print("\nOpening browser for authorization...")
-    webbrowser.open(auth_url)
-    print("After authorizing, copy the 'code' parameter from the redirect URL.")
-    print()
-
-    # Wait for user to paste the authorization code
-    code = input("Enter the authorization code: ").strip()
-
-    # Exchange the code for credentials
-    flow.fetch_token(code=code)
-
+    # Try the standard localhost server flow first
+    try:
+        print("\nOpening browser for authorization...")
+        print("(Press Ctrl-C to switch to manual code entry)")
+        
+        # This opens the browser and runs local server
+        flow.run_local_server(port=port if port else 8080)
+        
+    except KeyboardInterrupt:
+        # User interrupted, switch to manual flow
+        print("\n\nSwitching to manual authorization...")
+        flow.redirect_uri = "http://localhost"
+        auth_url, _ = flow.authorization_url(prompt="consent")
+        
+        print("Please visit this URL if not already open:")
+        print(auth_url)
+        print("\nAfter authorizing, copy the 'code' parameter from the redirect URL.")
+        print()
+        
+        code = input("Enter the authorization code: ").strip()
+        flow.fetch_token(code=code)
+    
     return cast(Credentials, flow.credentials)
 
 
