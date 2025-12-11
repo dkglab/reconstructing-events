@@ -45,7 +45,7 @@ def manual_auth_flow(
     # Try the standard localhost server flow first
     try:
         print("\nOpening browser for authorization...")
-        print("(Press Ctrl-C to switch to manual code entry)")
+        print("(Press Ctrl-C to switch to manual code entry)\n")
 
         # This opens the browser and runs local server
         flow.run_local_server(port=port if port else 8080)
