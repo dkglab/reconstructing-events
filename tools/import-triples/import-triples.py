@@ -8,7 +8,7 @@ from urllib.parse import quote
 from typing import cast, Any, Mapping, Iterable
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
-
+from oauthlib.oauth2.rfc6749.errors import MismatchingStateError
 
 OAUTH_PORT = 8080
 
@@ -46,28 +46,28 @@ def manual_auth_flow(
     try:
         print("\nOpening browser for authorization...")
         print("(Press Ctrl-C to switch to manual code entry)")
-        
+
         # This opens the browser and runs local server
         flow.run_local_server(port=port if port else 8080)
-        
-    except KeyboardInterrupt:
+
+    except (KeyboardInterrupt, MismatchingStateError):
         # User interrupted, switch to manual flow
         print("\n\nSwitching to manual authorization...")
-        
+
         # Create a NEW flow with the correct redirect URI
         flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
         flow.redirect_uri = "http://localhost"
         auth_url, _ = flow.authorization_url(prompt="consent")
-        
+
         print("Please visit this URL to authorize:")
         print(auth_url)
         webbrowser.open(auth_url)
         print("\nAfter authorizing, copy the 'code' parameter from the redirect URL.")
         print()
-        
+
         code = input("Enter the authorization code: ").strip()
         flow.fetch_token(code=code)
-    
+
     return cast(Credentials, flow.credentials)
 
 
