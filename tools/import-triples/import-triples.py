@@ -38,24 +38,24 @@ def manual_auth_flow(
 ) -> Credentials:
     """Manual flow that prints URL and waits for authorization code."""
     from google_auth_oauthlib.flow import InstalledAppFlow
-    
+
     flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
-    
+
     # Generate the authorization URL
-    flow.redirect_uri = 'urn:ietf:wg:oauth:2.0:oob'
-    auth_url, _ = flow.authorization_url(prompt='consent')
-    
+    flow.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+    auth_url, _ = flow.authorization_url(prompt="consent")
+
     # Print the URL for the user
     print("\nPlease visit this URL to authorize the application:")
     print(auth_url)
     print()
-    
+
     # Wait for user to paste the authorization code
     code = input("Enter the authorization code: ").strip()
-    
+
     # Exchange the code for credentials
     flow.fetch_token(code=code)
-    
+
     return flow.credentials
 
 
