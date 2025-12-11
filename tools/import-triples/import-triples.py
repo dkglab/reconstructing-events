@@ -47,15 +47,15 @@ def manual_auth_flow(
     print("\nAfter authorizing, paste the full redirect URL.\n")
 
     redirect_url = input("Enter the redirect URL: ").strip()
-    
+
     # Parse the code from the URL
     parsed = urlparse(redirect_url)
     params = parse_qs(parsed.query)
-    code = params.get('code', [None])[0]
-    
+    code = params.get("code", [None])[0]
+
     if not code:
         raise ValueError("No authorization code found in URL")
-    
+
     flow.fetch_token(code=code)
 
     return cast(Credentials, flow.credentials)
@@ -144,7 +144,7 @@ spreadsheet = None
 for name in sheet_names:
     try:
         spreadsheet = client.open(name)
-        print(f"Opened spreadsheet: {name}", file=sys.stderr)
+        print(f"\nOpened spreadsheet: {name}", file=sys.stderr)
         break
     except gspread.exceptions.SpreadsheetNotFound:
         continue
