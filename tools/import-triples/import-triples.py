@@ -38,6 +38,7 @@ def manual_auth_flow(
 ) -> Credentials:
     """Manual flow that prints URL and waits for authorization code."""
     from google_auth_oauthlib.flow import InstalledAppFlow
+    from google.oauth2.credentials import Credentials as OAuth2Credentials
 
     flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
 
@@ -56,7 +57,7 @@ def manual_auth_flow(
     # Exchange the code for credentials
     flow.fetch_token(code=code)
 
-    return flow.credentials
+    return cast(OAuth2Credentials, flow.credentials)
 
 
 def expand_curie(curie: str) -> URIRef:
