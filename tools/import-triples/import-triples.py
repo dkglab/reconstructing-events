@@ -5,7 +5,7 @@ from rdflib import Graph, URIRef, Literal, BNode, Node
 from rdflib.namespace import XSD, RDFS, Namespace
 from rdflib.util import from_n3
 from rdflib.collection import Collection
-from urllib.parse import quote
+from urllib.parse import quote, urlparse, parse_qs
 from typing import cast, Any, Mapping, Iterable
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -44,9 +44,18 @@ def manual_auth_flow(
     print("\nPlease visit this URL to authorize:")
     print(auth_url)
     webbrowser.open(auth_url)
-    print("\nAfter authorizing, copy the 'code' parameter from the redirect URL.\n")
+    print("\nAfter authorizing, paste the full redirect URL.\n")
 
-    code = input("Enter the authorization code: ").strip()
+    redirect_url = input("Enter the redirect URL: ").strip()
+    
+    # Parse the code from the URL
+    parsed = urlparse(redirect_url)
+    params = parse_qs(parsed.query)
+    code = params.get('code', [None])[0]
+    
+    if not code:
+        raise ValueError("No authorization code found in URL")
+    
     flow.fetch_token(code=code)
 
     return cast(Credentials, flow.credentials)
