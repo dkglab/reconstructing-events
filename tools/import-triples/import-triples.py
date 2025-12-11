@@ -33,11 +33,30 @@ PREFIXES = {
 ECRM = Namespace(PREFIXES["ecrm"])
 
 
-def fixed_port_local_server_flow(
+def manual_auth_flow(
     client_config: Mapping[str, Any], scopes: Iterable[str], port: int = 0
 ) -> Credentials:
-    """Local-server flow that always listens on port 8080."""
-    return gspread.auth.local_server_flow(client_config, scopes, port=OAUTH_PORT)
+    """Manual flow that prints URL and waits for authorization code."""
+    from google_auth_oauthlib.flow import InstalledAppFlow
+    
+    flow = InstalledAppFlow.from_client_config(client_config, scopes=scopes)
+    
+    # Generate the authorization URL
+    flow.redirect_uri = 'urn:ietf:wg:oauth:2.0:oob'
+    auth_url, _ = flow.authorization_url(prompt='consent')
+    
+    # Print the URL for the user
+    print("\nPlease visit this URL to authorize the application:")
+    print(auth_url)
+    print()
+    
+    # Wait for user to paste the authorization code
+    code = input("Enter the authorization code: ").strip()
+    
+    # Exchange the code for credentials
+    flow.fetch_token(code=code)
+    
+    return flow.credentials
 
 
 def expand_curie(curie: str) -> URIRef:
@@ -113,7 +132,7 @@ def add_triple(g, s, p, o):
 
 
 client = gspread.oauth(
-    scopes=SCOPES, credentials_filename=CREDENTIALS, flow=fixed_port_local_server_flow
+    scopes=SCOPES, credentials_filename=CREDENTIALS, flow=manual_auth_flow
 )
 
 # Try to open sheets in order of preference
