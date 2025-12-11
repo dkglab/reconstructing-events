@@ -58,7 +58,9 @@ and make your own copy of it.
    expected. When you see the browser fail to connect to `localhost`,
    copy the URL out of the address bar. It will look something like
    this (but with much longer strings in place of `XXX`, `YYY`, and
-   `ZZZ`: `http://localhost/?state=XXX&code=YYY&scope=ZZZ`
+   `ZZZ`:
+
+   `http://localhost/?state=XXX&code=YYY&scope=ZZZ`
 
 1. Switch back to the browser tab that your codespace is in, and paste
    the URL you copied into the terminal.
